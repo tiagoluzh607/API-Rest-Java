@@ -65,7 +65,15 @@ public class CarrinhoTest {
         Entity<String> entity = Entity.entity(carrinhoXML, MediaType.APPLICATION_XML); //monta string de envio
         
         Response response = target.path("/carrinhos").request().post(entity); // envia e pega o resultado
-        Assert.assertEquals("<status>sucesso</status>", response.readEntity(String.class));
+        Assert.assertEquals(201, response.getStatus()); // testa para ver se o código de retorno é 201 do http (criado com sucesso)
+        
+        //O servidor manda de volta no cabeçalho um location : que é a localização do carrinho criado, testamos se foi realmente criado
+        
+        String location = response.getHeaderString("Location"); //traz o conteúdo do cabeçalho Location(o server esta configurado para trazer o enderco do item criado)
+        String conteudo = client.target(location).request().get(String.class); //faz uma requisicao get no novo endereço e pega o conteúdo
+        Assert.assertTrue(conteudo.contains("Tablet")); // testa o conteudo para ver se vai vir o tablet criado a cima
+        
+        
 	}
 
 }
