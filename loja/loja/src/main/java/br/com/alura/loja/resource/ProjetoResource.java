@@ -14,12 +14,12 @@ public class ProjetoResource {
 	
 	@Path("{id}") // acessar com /id no final do link
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_XML)
 	public String busca(@PathParam("id") long id) { // acessar localhost:8080/projetos/1
 		
 		ProjetoDAO projetoDAO = new ProjetoDAO();
 		Projeto projeto = projetoDAO.busca(id);
-		return projeto.toJson();
+		return projeto.toXML();
 	}
 
 }

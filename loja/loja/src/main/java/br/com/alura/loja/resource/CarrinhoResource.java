@@ -15,9 +15,9 @@ public class CarrinhoResource {
 
 	@Path("{id}") //indica a url como /id no final /carrinhos/id
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_XML)
 	public String busca(@PathParam("id") long id) { //acessar localhost:8080/carrinhos/1
 		Carrinho carrinho = new CarrinhoDAO().busca(id);
-		return carrinho.toJson();
+		return carrinho.toXML();
 	}
 }
