@@ -1,5 +1,6 @@
 package br.com.alura.loja.modelo;
 
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 
 public class Projeto {
@@ -42,6 +43,11 @@ public class Projeto {
 	public String toXML() {
 		// TODO Auto-generated method stub
 		return new XStream().toXML(this);
+	}
+
+	public String toJson() {
+		// TODO Auto-generated method stub
+		return new Gson().toJson(this);
 	}
 
 	
