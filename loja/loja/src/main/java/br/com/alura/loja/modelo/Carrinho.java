@@ -82,4 +82,9 @@ public class Carrinho {
 		return new XStream().toXML(this);
 	}
 
+	public String toJson() {
+		// TODO Auto-generated method stub
+		return new Gson().toJson(this);
+	}
+
 }
