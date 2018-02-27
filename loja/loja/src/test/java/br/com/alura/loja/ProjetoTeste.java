@@ -58,7 +58,10 @@ public class ProjetoTeste {
         Entity<String> entity = Entity.entity(projetoXML, MediaType.APPLICATION_XML); //monta string de envio
         
         Response response = target.path("/projetos").request().post(entity); // envia e pega o resultado
-        Assert.assertEquals("<status>sucesso</status>", response.readEntity(String.class));
-		
+        Assert.assertEquals(201, response.getStatus()); // testa o resultado do Status code 201 (Criado com sucesso)
+        
+        String location = response.getHeaderString("Location"); //traz o conteúdo do cabeçalho Location(o server esta configurado para trazer o enderco do item criado)
+        String conteudo = client.target(location).request().get(String.class); //faz uma requisicao get no novo endereço e pega o conteúdo
+        Assert.assertTrue(conteudo.contains("Tiaguera")); // testa o conteudo para ver se vai vir o tablet criado a cima
 	}
 }
