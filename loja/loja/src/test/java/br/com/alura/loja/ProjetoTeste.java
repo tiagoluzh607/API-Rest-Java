@@ -48,7 +48,7 @@ public class ProjetoTeste {
 		
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target("http://localhost:8080");
-		
+		 
 		//criando projeto
 		Projeto projeto = new Projeto(3, "Loja Tiaguera", 1996);
 		
