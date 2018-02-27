@@ -62,9 +62,9 @@ public class CarrinhoTest {
         String carrinhoXML = carrinho.toXML();
         
         //Enviando via post
-        Entity<String> entity = Entity.entity(carrinhoXML, MediaType.APPLICATION_XML);
-
-        Response response = target.path("/carrinhos").request().post(entity);
+        Entity<String> entity = Entity.entity(carrinhoXML, MediaType.APPLICATION_XML); //monta string de envio
+        
+        Response response = target.path("/carrinhos").request().post(entity); // envia e pega o resultado
         Assert.assertEquals("<status>sucesso</status>", response.readEntity(String.class));
 	}
 
