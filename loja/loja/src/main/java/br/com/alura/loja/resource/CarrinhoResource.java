@@ -61,4 +61,15 @@ public class CarrinhoResource {
 		carrinho.troca(produto);
 		return Response.ok().build();
 	}
+	
+	@Path("{id}/produtos/{produtoId}/quantidade") //// acessar via PUT passando um xml exemplo localhost:8080/carrinhos/1/produtos/3467/quantidade
+	@PUT
+	@Consumes(MediaType.APPLICATION_XML) //indica que só aceitamos no http o media type xml
+	public Response alteraQuantidadeProduto(String conteudo, @PathParam("id") long id, @PathParam("produtoId") long produtoId) {
+		
+		Carrinho carrinho = new CarrinhoDAO().busca(id);
+		Produto produto = (Produto) new XStream().fromXML(conteudo);
+		carrinho.trocaQuantidade(produto); //trocamos somente a quantidade do produto
+		return Response.ok().build();
+	}
 }
