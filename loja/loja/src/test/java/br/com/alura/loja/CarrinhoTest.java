@@ -1,5 +1,6 @@
 package br.com.alura.loja;
 
+import javax.swing.JPopupMenu.Separator;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -8,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,12 +30,18 @@ public class CarrinhoTest {
 	@Before
     public void before() {
         this.server = Servidor.inicializaServidor();
-		this.client = ClientBuilder.newClient();
+        SeparadorDoConsole();
+        
+        ClientConfig config = new ClientConfig(); //registra uma configuracao do nosso cliente para termos mais detalhes no log de saida
+        config.register(new LoggingFilter()); //registra uma configuracao do nosso cliente para termos mais detalhes no log de saida
+        
+		this.client = ClientBuilder.newClient(config);
 		this.target = this.client.target("http://localhost:8080");
     }
 
     @After
     public void mataServidor() {
+    	SeparadorDoConsole();
         server.stop();
     }
 	
@@ -73,6 +82,10 @@ public class CarrinhoTest {
         Assert.assertTrue(conteudo.contains("Tablet")); // testa o conteudo para ver se vai vir o tablet criado a cima
         
         
+	}
+	
+	private void SeparadorDoConsole() {
+        System.out.println("\n----------------------------------------------------------------\n\n");
 	}
 
 }

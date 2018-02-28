@@ -8,6 +8,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,12 +28,18 @@ public class ProjetoTeste {
 	@Before
 	public void startaServidor() {
 		this.servidor = Servidor.inicializaServidor();
-		this.client = ClientBuilder.newClient();
+		SeparadorDoConsole();
+		
+		ClientConfig config = new ClientConfig(); //registra uma configuracao do nosso cliente para termos mais detalhes no log de saida
+		config.register(new LoggingFilter()); //registra uma configuracao do nosso cliente para termos mais detalhes no log de saida
+		
+		this.client = ClientBuilder.newClient(config);
 		this.target = this.client.target("http://localhost:8080");
 	}
 	
 	@After
 	public void stopServidor() {
+		SeparadorDoConsole();
 		servidor.stop();
 	}
 
@@ -62,5 +70,9 @@ public class ProjetoTeste {
         String location = response.getHeaderString("Location"); //traz o conteúdo do cabeçalho Location(o server esta configurado para trazer o enderco do item criado)
         String conteudo = this.client.target(location).request().get(String.class); //faz uma requisicao get no novo endereço e pega o conteúdo
         Assert.assertTrue(conteudo.contains("Tiaguera")); // testa o conteudo para ver se vai vir o tablet criado a cima
+	}
+	
+	private void SeparadorDoConsole() {
+        System.out.println("\n----------------------------------------------------------------\n\n");
 	}
 }
