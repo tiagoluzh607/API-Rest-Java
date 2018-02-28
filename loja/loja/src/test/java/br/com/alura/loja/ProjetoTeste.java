@@ -20,10 +20,14 @@ import junit.framework.Assert;
 public class ProjetoTeste {
 	
 	private HttpServer servidor;
+	private Client client;
+	private WebTarget target;
 
 	@Before
 	public void startaServidor() {
 		this.servidor = Servidor.inicializaServidor();
+		this.client = ClientBuilder.newClient();
+		this.target = this.client.target("http://localhost:8080");
 	}
 	
 	@After
@@ -34,9 +38,7 @@ public class ProjetoTeste {
 	@Test
 	public void testaConexaoDoResourceProjeto() {
 		
-		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target("http://localhost:8080");
-		String conteudo = target.path("/projetos/1").request().get(String.class);
+		String conteudo = this.target.path("/projetos/1").request().get(String.class);
 		
 		Projeto projeto = (Projeto) new XStream().fromXML(conteudo);
 		
@@ -45,9 +47,6 @@ public class ProjetoTeste {
 	
 	@Test
 	public void adicionaUmNovoProjeto() {
-		
-		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target("http://localhost:8080");
 		 
 		//criando projeto
 		Projeto projeto = new Projeto(3, "Loja Tiaguera", 1996);
@@ -57,11 +56,11 @@ public class ProjetoTeste {
 		//Enviando via post
         Entity<String> entity = Entity.entity(projetoXML, MediaType.APPLICATION_XML); //monta string de envio
         
-        Response response = target.path("/projetos").request().post(entity); // envia e pega o resultado
+        Response response = this.target.path("/projetos").request().post(entity); // envia e pega o resultado
         Assert.assertEquals(201, response.getStatus()); // testa o resultado do Status code 201 (Criado com sucesso)
         
         String location = response.getHeaderString("Location"); //traz o conteúdo do cabeçalho Location(o server esta configurado para trazer o enderco do item criado)
-        String conteudo = client.target(location).request().get(String.class); //faz uma requisicao get no novo endereço e pega o conteúdo
+        String conteudo = this.client.target(location).request().get(String.class); //faz uma requisicao get no novo endereço e pega o conteúdo
         Assert.assertTrue(conteudo.contains("Tiaguera")); // testa o conteudo para ver se vai vir o tablet criado a cima
 	}
 }
