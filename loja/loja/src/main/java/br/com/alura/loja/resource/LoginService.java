@@ -15,12 +15,15 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.gson.Gson;
 
 import br.com.alura.loja.modelo.Credencial;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Path("/login")
 public class LoginService {
+
+	private static final String FRASE_SEGREDO = "segredo";
 
 	//Método POST que valida as credencias enviadas na request 
 	//e se for validas retorna o token para o cliente	
@@ -71,7 +74,7 @@ public class LoginService {
 		expira.add(Calendar.DAY_OF_MONTH, expiraEmDias);
 
 		//Encoda a frase segredo pra base64 pra ser usada na geração do token 
-		byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("segredo");
+		byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(FRASE_SEGREDO);
 
 		SecretKeySpec key = new SecretKeySpec(apiKeySecretBytes, algoritimoAssinatura.getJcaName());
 
@@ -86,4 +89,26 @@ public class LoginService {
 			return construtor.compact();//Constrói o token retornando ele como uma String
 
 		}
+
+	public Claims validaToken(String token) {
+		
+		try{
+		   //JJWT vai validar o token caso o token não seja valido ele vai executar uma exeption
+		   //o JJWT usa a frase segredo pra descodificar o token e ficando assim possivel
+		   //recuperar as informações que colocamos no payload
+		   Claims claims = Jwts.parser()     
+
+			     .setSigningKey(DatatypeConverter.parseBase64Binary(FRASE_SEGREDO))
+
+				.parseClaimsJws(token).getBody();
+
+				 //Aqui é um exemplo que se o token for valido e descodificado 
+				 //vai imprimir o login que foi colocamos no token
+				 System.out.println(claims.getIssuer());
+		   return claims;
+
+		}catch(Exception ex){
+				throw ex;
+		}
+	}
 }
