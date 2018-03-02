@@ -27,7 +27,6 @@ public class ConversorMedidasService {
 	public Response milhasParaQuilometros(@PathParam("milhas")Double milhas)
 	{
 			milhas = milhas * 1.6;
-
 			return Response.ok(milhas).build();
 	}
 
